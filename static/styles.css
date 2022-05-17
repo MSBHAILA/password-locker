@@ -1,0 +1,213 @@
+/* /-----------GLOBAL---------------/ */
+
+/* *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --global-background-color: #90b9e0;
+    --link-background-color: rgb(255, 62, 62);
+    --default-text-color: black;
+    --hover-color: grey;
+    
+}
+
+html{
+    background-color: var(--global-background-color);
+    color: var(--default-text-color);
+}
+
+a{
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--default-text-color);
+}
+
+a:hover{
+    color: var(--hover-color);
+}
+
+input{
+    width: 70%;
+    margin: 10px auto;
+    padding: 5px;
+    border: none;    
+}
+
+header{
+    box-shadow: 0 10px 15px -3px rgb(144, 220, 255);
+}
+
+/------------nav-------/
+
+/* header nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px 30px;
+}
+
+header nav ul{
+    list-style-type: none;
+    display: inline-flex;
+}
+
+header nav ul li{
+    margin: 5px;
+}*/
+
+body,
+html {
+    height: 100%;
+    background-image: url('passwords.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+}
+
+html {
+    background-color: #EFFFFD;
+}
+
+.ms-auto {
+    margin-left: auto;
+    margin-right: 25px;
+}
+
+/* /------footer--------/ */
+
+footer {
+    /* position: fixed; */
+    bottom: 0;
+    left: 0;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 10px 0 15px var powderblue;
+}
+
+.password-container {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+
+.password-container-box {
+    border: 1px solid black;
+    margin: auto;
+    border-radius: 15%;
+    padding: 25px 50px;
+    background-color: rgb(244, 254, 255);
+    /* position: absolute; */
+    /*top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+}
+
+input {
+    padding: 5px;
+    margin: 5px;
+    width: 90%;
+}
+
+input[value="Login"],
+input[value="Add"],
+input[ value="Register"] {
+    background-color: #2FA4FF;
+    color: whitesmoke;
+}
+
+img {
+    margin: auto;
+    width: 50%;
+}
+
+.actions {
+    margin: 5px;
+}
+
+.actions a {
+    display: none;
+    background-color: var(--link-background-collor);
+    flex-direction: column;
+    padding: 5px;
+    align-items: center;
+}
+
+.actions:hover .action-item {
+    display: flex;
+}
+
+.copydet {
+    cursor: pointer;
+}
+
+
+/* password generator */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #aad7ff;
+    height: 50%;
+}
+
+.password-generator {
+    padding: 40px;
+    background-color: #7db7fa;
+    color: white;
+    font-size: 20px;
+    font-family: sans-serif;
+}
+
+.password-generator div {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.password {
+    min-width: 280px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+}
+
+.password p {
+    padding: 6px 10px;
+}
+
+.password i {
+    background-color: rgba(0, 0, 0, 0.575);
+    padding: 6px 10px;
+}
+
+.password-generator button {
+    width: 100%;
+    border: none;
+    color: rgba(255, 255, 255, 0.699);
+    background-color: #2c131a;
+    padding: 10px;
+}
+
+.bg {
+    background-image: url('password-management.jpg');
+    height: 100%;
+    background-position: center;
+    /* background-repeat: no-repeat; */
+    background-size: cover;
+}
+
+.navbar {
+    padding: 15px;
+    font-size: 1.25rem;
+    font-weight: lighter;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}

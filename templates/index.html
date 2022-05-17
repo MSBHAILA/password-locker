@@ -1,0 +1,292 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Manager</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="main.js"></script>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div style="font-weight: bolder;" class="navbar-brand"><a class="nav-link" href=""><i
+            class="fa fa-lock"></i>&nbsp; Password Manager </a>
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="" data-bs-toggle="modal"
+              data-bs-target="#password_generator_modal">Generate Password</a></li>
+          {% if request.user.is_anonymous %}
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              href="">Login</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#modal2" href="">SingUp</a>
+          </li>
+          {% else %}
+          <li class="nav-item"><a class="nav-link" href="javascript:;"
+              onclick="document.getElementById('logout-btn').click();">
+              Logout</a></li>
+          {% comment %}
+          <!-- <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">
+              Logout</a></li> --> {% endcomment %}
+          <form hidden="true" action="." method="POST">
+            {% csrf_token %}
+            <input type="submit" id="logout-btn" name="logout">
+          </form>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#modal3" href="">Add</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  {% comment %} display messages {% endcomment %}
+  {% if messages %}
+  <div class="messages" style="text-align: center;">
+    {% for message in messages %}
+    <p>
+      {% if message.tags == "error" %}
+      <i class="fa fa-exclamation" aria-hidden="true"></i>
+      {% else %}
+      <i class="fa fa-check" aria-hidden="true"></i>
+      {% endif %}
+      &nbsp;{{message}}
+      {% endfor %}
+    </p>
+  </div>
+  {% endif %}
+
+  {% if code %}
+  <div style="text-align: center;">
+    <form action="." method="POST" role="form">
+      {% csrf_token %}
+      <h2>Please confirm your email.</h2>
+      <p>Check your email</p>
+      <input type="text" name="code" placeholder="enter 6 digit code...">
+      <input type="text" hidden="true" name="user" value="{{user.username}}">
+      <input type="submit" value="Confirm" name="confirm">
+    </form>
+  </div>
+  {% endif %}
+
+  {% if exists %}
+  <div style="margin: auto; width: 70%;">
+    <div class="row password-container">
+      {% for password in passwords %}
+
+      <div class=" col-lg-3 col-md-6 password-container-box" style="margin: 2%;">
+        <div class="actions">&nbsp;Actions <i class="fa fa-arrow-down" aria-hidden="true"></i>
+          <a href="javascript:;" onclick="document.getElementById('delete-btn{{password.id}}').click();"
+            class="action-item">Delete</a>
+          <form hidden="true" action="." method="POST">
+            {% csrf_token %}
+            <input type="text" hidden="true" name="password-id" value="{{password.id}}">
+            <input type="submit" id="delete-btn{{password.id}}" name="delete">
+          </form>
+        </div>
+
+        <div class="logos"><img class="logo" src="{{password.logo}}" alt=""></div>
+        <div>{{password.name}}</div>
+        <input type="email" name="email" value="{{password.email}}"><i class="fas fa-copy copydet"
+          title="copy to clipboard"></i>
+        <input type="text" name="password" value="{{password.password}}" id="user-password{{password.id}}"><i
+          class="fas fa-copy copydet" title="copy to clipboard"></i>
+        <!-- <input type="checkbox" onclick="showPassword()">Show Password -->
+
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="bg"></div>
+  {% endif %}
+
+
+
+  <!-- <div class="modal-login" id="login">
+        <form>
+            <h2>Login</h2>
+            <input type="text" name="username" placeholder="Username">
+            <input type="text" name="email" placeholder="Email">
+            <input type="submit" placeholder="Login">
+        </form> 
+    </div> -->
+
+
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="." role="form" method="POST">
+            {% csrf_token %}
+            <h2>Login</h2>
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="password">
+            <input type="submit" value="Login" name="login-form">
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- password generator modal -->
+  <div class="modal fade" id="password_generator_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Random Password Generator</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="password-generator">
+              <h2>Password Generator</h2>
+              <div class="password">
+                <p id="passwordBox"></p><i class="far fa-clipboard" onclick="copyPassword()"></i></i>
+              </div>
+              <div>
+                <label for="length">Length</label>
+                <input type="number" id="length" min="6" max="20" value="6">
+              </div>
+              <div>
+                <label for="symbol">Include Symbol</label>
+                <input type="checkbox" id="symbol" checked>
+              </div>
+              <div>
+                <label for="number">Include Number</label>
+                <input type="checkbox" id="number" checked>
+              </div>
+              <div>
+                <label for="lowerCase">Include lowerCase</label>
+                <input type="checkbox" id="lowerCase" checked>
+              </div>
+              <div>
+                <label for="upperCase">Include upperCase</label>
+                <input type="checkbox" id="upperCase" checked>
+              </div>
+              <button onclick="createPassword()">Get Random Password</button>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SignUp modal -->
+
+  <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel2">SignUp</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="." role="form" method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="username">
+            <input type="email" name="email" placeholder="email">
+            <input type="password" name="password" placeholder="password">
+            <input type="password" name="password2" placeholder="confirm password">
+            <input type="submit" value="Register" name="signup-form">
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add New Password -->
+  <div class="modal fade" id="modal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel2">Add New Password</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="." role="form" method="POST">
+            {% csrf_token %}
+            <input type="url" name="url" placeholder="URL of the website">
+            <input type="email" name="email" placeholder="Email">
+            <input type="password" name="password" placeholder="Password">
+            <input type="submit" value="Add" name="add-password">
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+    integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+    crossorigin="anonymous"></script>
+
+  <script src="{% static 'main.js' %}"></script>
+
+
+  <footer>
+    <span style="display: flex; justify-content: center; ">Copyright &copy; 2022 All rights reserved</span>
+  </footer>
+</body>
+
+</html>
