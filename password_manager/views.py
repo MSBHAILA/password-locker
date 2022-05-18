@@ -15,7 +15,7 @@ from .models import Password
 
 br = Browser()
 br.set_handle_robots(False)
-fernet = Fernet(settings.KEY)
+fernet = Fernet(settings.KEY.encode())
 
 # Create your views here.
 
